@@ -234,6 +234,61 @@ plotClonePhylog(ep,
                 keepEvents = TRUE ## Arrows showing how many times each clones appeared
 )
 
+################ Alternative simulation of the monotonic model #############
+############################################################################
+
+## vector with the mutation rate associated to each gene
+## mutation rates are based on mutation frequency in cross-sectional data
+## Module A, B and C contains APC, TP53 and KRAS respectively
+## It's frequency in data is higher than the others genes. Thus,
+## It's mutation frequency is higher. In contrast, the frequency
+## of appearance in tumours of modules D and E is lower and therefore,
+## its mutation rate
+
+muvect <- c("A" = 1e-4, "B" = 1e-4, "C" = 1e-4, "D" = 1e-5, "E" = 1e-5) 
+
+
+set.seed(113) ## Fix the seed, so we can repeat it
+ep <- oncoSimulIndiv(Wood_colo, ## A fitnessEffects object
+                     model = "McFL", ## Model used
+                     mu = muvect, ## Mutation rate
+                     sampleEvery = 0.02, ## How often the whole population is sampled
+                     keepEvery = 1,
+                     initSize = 400, ## Initial population time
+                     finalTime = 220,
+                     keepPhylog = TRUE, ## Allow to see parent-child relationships
+                     onlyCancer = FALSE
+)
+
+## Plot of simulation
+plot(ep, ## OncoSimulIndv model
+     show = "genotypes",
+     type = "stacked"
+     #plotDiversity = TRUE ## Show a small plot on top with Shannon's diversity index
+)
+
+## Plot of simulation
+plot(ep, ## OncoSimulIndv model
+     show = "genotypes",
+     type = "line"
+     #plotDiversity = TRUE ## Show a small plot on top with Shannon's diversity index
+)
+
+## Plot of simulation
+plot(ep, ## OncoSimulIndv model
+     show = "genotypes",
+     type = "stream"
+     #plotDiversity = TRUE ## Show a small plot on top with Shannon's diversity index
+)
+
+## Parent-child relationship derived from simulation
+plotClonePhylog(ep,
+                #fixOverlap = TRUE,
+                N = 0, ## Specify clones that exist
+                keepEvents = TRUE ## Arrows showing how many times each clones appeared
+)
+
+
 
 
 ###############################################################################
@@ -304,6 +359,178 @@ plotClonePhylog(ep,
                 N = 0, ## Specify clones that exist
                 keepEvents = TRUE ## Arrows showing how many times each clones appeared
 )
+
+
+####### ########Alternative simulation of the semimonotonic model #############
+############################################################################
+
+## We assume the same mutation rate vector as in the previous case
+muvect <- c("A" = 1e-4, "B" = 1e-4, "C" = 1e-4, "D" = 1e-5, "E" = 1e-5) 
+
+
+set.seed(113) ## Fix the seed, so we can repeat it
+ep <- oncoSimulIndiv(Wood_colo, ## A fitnessEffects object
+                     model = "McFL", ## Model used
+                     mu = muvect, ## Mutation rate
+                     sampleEvery = 0.02, ## How often the whole population is sampled
+                     keepEvery = 1,
+                     initSize = 400, ## Initial population time
+                     finalTime = 220,
+                     keepPhylog = TRUE, ## Allow to see parent-child relationships
+                     onlyCancer = FALSE
+)
+
+## Plot of simulation
+plot(ep, ## OncoSimulIndv model
+     show = "genotypes",
+     type = "stacked"
+     #plotDiversity = TRUE ## Show a small plot on top with Shannon's diversity index
+)
+
+## Plot of simulation
+plot(ep, ## OncoSimulIndv model
+     show = "genotypes",
+     type = "line"
+     #plotDiversity = TRUE ## Show a small plot on top with Shannon's diversity index
+)
+
+## Plot of simulation
+plot(ep, ## OncoSimulIndv model
+     show = "genotypes",
+     type = "stream"
+     #plotDiversity = TRUE ## Show a small plot on top with Shannon's diversity index
+)
+
+## Parent-child relationship derived from simulation
+plotClonePhylog(ep,
+                #fixOverlap = TRUE,
+                N = 0, ## Specify clones that exist
+                keepEvents = TRUE ## Arrows showing how many times each clones appeared
+)
+
+
+
+###############################################################################
+################################# Order Effects ###############################
+###############################################################################
+
+## To assess how does order affect in fitness, we will specify different fitness
+## to a specific order in gene mutation. 
+## For this purpose, the simplify model of pathTiMEx of colorectal cancer is used
+
+## 1. Construct the fitness object
+## pathTiMEx model includes a parameter called (lambda) which refers to the estimates
+## of its waiting time rate. It gives information about when an event occurs. 
+## A higher lambda value means an early event in cancer progression.
+
+## From pathTiMEx model, it is obtained that: "APC (module A) is
+## an early event (k = 9:5), followed by KRAS (module B) (k = 2:89) 
+## and TP53 (module C) (k = 1:92).
+
+## Thus, a higher fitness values is done to this order in cancer progression.
+## While the other combination will get a lower value.
+
+## As a first approach, only the three previous named genes are used
+
+cc <- data.frame(parent = c(rep("Root", 2), "A"),
+                 child = c("A", "C", "B"),
+                 typeDep = "MN")
+
+## Fitness object
+cc_order <- allFitnessEffects(
+  orderEffects = c("A > B > C" = 0.5, "B > A > C" = 0.2,
+                   "B > C > A" = 0.1,
+                   "B > C" = 0.2,
+                   "C > B" = 0.1,
+                   "B > A" = 0.1,
+                   "A > B" = 0.3),
+
+  geneToModule =
+    c("A" = "A",
+      "B" = "B",
+      "C" = "C") )
+
+## All genotypes derived
+cc_order_geno <- evalAllGenotypes(cc_order, order = TRUE)
+
+## To visualize the order
+cc_order_geno
+
+## Fitness landscape derived from genotypes ordered
+plotFitnessLandscape(cc_order_geno) ## Error in to_Fitness_Matrix(x, max_num_genotypes = max_num_genotypes) : 
+                                    ## We cannot deal with order effects yet.
+
+
+##### #################### An alternative is to use epistasis ##################
+
+## As before, the number of genes is reduced to A, B and C.
+## Fitness values are given according to the restrictions derived from
+## the generative model.
+
+## 1 Fitness object defined using epistasias
+cc_epi <- allFitnessEffects(epistasis = 
+                              c("A: -B: -C" = 0.4,
+                                "-A: B: -C" = -0.4, ## Presence of B in absence of A is penalized
+                                "-A: -B: C" = 0.3,
+                                "A: B: -C" = 0.8,
+                                "A : B: C" = 1.4,
+                                "-A: B: C" = 0.1, ## Presence of B in absence of A is penalized
+                                "A : -B: C" = 0.5
+                                ))
+
+## 2 Genotypes derived from fitness defined with epistasia relationships
+cc_epi_geno <- evalAllGenotypes(cc_epi)
+
+## Visualization of fitness
+cc_epi_geno
+
+## Fitness landscape from this relationships
+plot(cc_epi_geno)
+
+## Now, this fitness landscape is used to model cancer progression
+
+set.seed(2) ## Fix the seed, so we can repeat it
+ep <- oncoSimulIndiv(cc_epi, ## A fitnessEffects object
+                     model = "McFL", ## Model used
+                     mu = 1e-4, ## Mutation rate
+                     sampleEvery = 0.02, ## How often the whole population is sampled
+                     keepEvery = 1,
+                     initSize = 400, ## Initial population time
+                     finalTime = 220,
+                     keepPhylog = TRUE, ## Allow to see parent-child relationships
+                     onlyCancer = FALSE
+)
+
+## Plot of simulation
+plot(ep, ## OncoSimulIndv model
+     show = "genotypes",
+     type = "stacked"
+     #plotDiversity = TRUE ## Show a small plot on top with Shannon's diversity index
+)
+
+## Plot of simulation
+plot(ep, ## OncoSimulIndv model
+     show = "genotypes",
+     type = "line"
+     #plotDiversity = TRUE ## Show a small plot on top with Shannon's diversity index
+)
+
+## Plot of simulation
+plot(ep, ## OncoSimulIndv model
+     show = "genotypes",
+     type = "stream"
+     #plotDiversity = TRUE ## Show a small plot on top with Shannon's diversity index
+)
+
+## Parent-child relationship derived from simulation
+## The only way to construct the DAG from epistasias
+plotClonePhylog(ep,
+                #fixOverlap = TRUE,
+                N = 0, ## Specify clones that exist
+                keepEvents = TRUE ## Arrows showing how many times each clones appeared
+)
+
+
 
 
 ####################################################################################################################
