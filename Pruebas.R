@@ -30,7 +30,7 @@ library(igraph)
 # (Methods Section). Therefore the high accumulation rates of
 # TP53, KRAS, and APC can be explained by a fitness effect on the
 # order of a few percent, compared to other mutations with lower
-# fitness gains of order 1023 or 1024
+# fitness gains of order 10^-3 or 10^-4
 # Thus, these critical genes,
 # which also form the mountains in the mutation landscape
 # , may act as ‘superdrivers’ that provide a higher fitness
