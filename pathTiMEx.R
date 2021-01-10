@@ -1,8 +1,121 @@
 #################################################################
 
+## Packages requiered
+
 library(OncoSimulR)
 library(graph)
 library(igraph)
+
+###################################################################
+
+##### IMPORTANT ##### READ THIS BEFORE #####
+
+###############################################################################
+#### Model derived from Gerstung et al. (2011)
+#### https://doi.org/10.1371/journal.pone.0027136
+
+# Specification of restrictions in the order of accumulation of mutations 
+# using a DAG with colorectal cancer.
+
+# The main advantage of this work is that the give an aproximate value
+# to the fitness of each genotype, based on the frequency of apparence
+# in cancer progression. Thus, it could give us an idea about the values to
+# include when defining fitness, rather than ranomd values as I was using.
+
+### In the paper is written the following...
+
+# Under the assumption of
+# an identical mutation rate per gene, an accumulation rate of 1 per
+# year corresponds approximately to a fitness surplus of 2.6%
+# (Methods Section). Therefore the high accumulation rates of
+# TP53, KRAS, and APC can be explained by a fitness effect on the
+# order of a few percent, compared to other mutations with lower
+# fitness gains of order 1023 or 1024
+# Thus, these critical genes,
+# which also form the mountains in the mutation landscape
+# , may act as ‘superdrivers’ that provide a higher fitness
+# gain than other genes.
+
+## Based on this values and the model propossed in figure 2A from the paper
+## I construct the folloing DAG, fitness landscape and simulation from the
+# fitness effects
+
+## 1. Fitness effects
+colrect <- allFitnessEffects(
+  data.frame(parent = c(rep("Root", 3), "APC", rep("KRAS", 2),
+                         "PIK3CA", "EVC2", "FBXW7", "TCF7L2"),
+             child = c("APC", "TP53", "PIK3CA", "KRAS", "FBXW7",
+                       rep("EVC2", 2), "TCF7L2", rep("EPHA3", 2)),
+             s = c(rep(0.26, 2), 0.001, 0.26, rep(0.0001, 6)),
+             sh = c(rep(-0.2, 2), -0.05, -0.2, rep(-0.02, 6)),
+             typeDep = "MN"),
+            drvNames = c("APC", "TP53", "KRAS", "PIK3CA", 
+                                    "EVC2", "FBXW7", "TCF7L2", "EPHA3")
+  )
+
+
+## Plot the DAG of the fitnessEffects object
+plot(colrect)
+
+## Obtain the fitness effects of all genotypes
+colrect_FL <- evalAllGenotypes(colrect)
+
+## Plot the fitness landscape of all genotypes
+plotFitnessLandscape(colrect_FL, use_ggrepel = TRUE, show_labels = TRUE
+                      )
+
+## 2. Simulate from it. We change several possible options. 
+
+set.seed(154) ## Fix the seed, so we can repeat it
+
+ep2 <- oncoSimulIndiv(colrect, model = "McFL",
+                      mu = 9e-4,
+                      sampleEvery = 0.02,
+                      keepEvery = 1,
+                      initSize = 500,
+                      finalTime = 50000,
+                      detectionDrivers = 3,
+                      keepPhylog = TRUE,
+                      onlyCancer = TRUE)
+
+## Plot the model derived
+plot(ep2, show = "genotypes", type = "stacked",
+     plotDiversity = TRUE)
+
+### Another simulation
+set.seed(149) ## Fix the seed, so we can repeat it
+
+ep3 <- oncoSimulIndiv(colrect, ## A fitnessEffects object
+                      model = "McFL", ## Model used
+                      mu = 7e-5, ## Mutation rate
+                      sampleEvery = 0.01, ## How often the whole population is sampled
+                      keepEvery = 1,
+                      initSize = 100, ## Initial population time
+                      finalTime = 1000,
+                      detectionDrivers = 3,
+                      keepPhylog = TRUE, ## Allow to see parent-child relationships
+                      onlyCancer = FALSE
+                      )
+
+## Parent-child relationship derived from simulation
+plotClonePhylog(ep3,
+                #fixOverlap = TRUE,
+                N = 0, ## Specify clones that exist
+                keepEvents = TRUE ## Arrows showing how many times each clones appeared
+                )
+## Model derived from the simulation
+plot(ep3, ## OncoSimulIndv model
+     show = "genotypes",
+     type = "stacked"
+     #plotDiversity = TRUE ## Show a small plot on top with Shannon's diversity index
+     )
+
+########################################################################################
+
+############################## pathTiMEx dataset #######################################
+
+########################################################################################
+
 
 # Colorectal cancer dataset from  https://doi.org/10.1089/cmb.2016.0171
 
