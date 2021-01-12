@@ -1,0 +1,238 @@
+---
+title: "Simulating pathways, mutual exclusivity, et al."
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+  pdf_document: default
+bibliography: Bibliografia_R.bib
+link-citations: yes
+notice: '@*'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## @Cristea2017 mutal exclusivity and modules 
+
+In @Cristea2017, the authors introduce a generative probabilistic graphical model of cancer progression called *pathTiMEx*. It is both, a waiting time model for independent mutually exclusive pathways, and a waiting time model for cancer progression among single genes. 
+
+From *cross-sectional* data derived from different type of tumors, authors are able to generate a cancer progression model including mutual exclusivity between groups, progression among pathways and modules of genes. The colorectal cancer model inferred depicted in Figure 3.A is used as an example of model to map.
+
+The colorectal cancer dataset used to built that model is obtained from @Wood2007. The poset restrictions proposed can be coded using the **OncoSimulR package**, concretely, the `allFitnessEffects` function. Model will be represented as an Diaciclic Direct Graph (DAG).
+
+
+```{r}
+## First, it is necessary to load OncoSimulR package
+library(OncoSimulR)
+
+## Restriction table (extended version of the poset)
+colcancer <- data.frame(
+                 parent = c(rep("Root",3), "A", "B", "C"), # Parent nodes
+                 child = c("A", "B", "D", "C", "E", "E"), ## Child nodes
+                 s = c(rep(0.5, 3), rep(0.05, 3)), 
+                 
+                 sh = -0.5, 
+                 
+                 typeDep = c(rep("MN", 4), rep("SM", 2)) ## Type of dependency 
+                  )
+
+## Fitness specification of the poset
+colcancer_efec <- allFitnessEffects(
+                  colcancer, # Poset
+                  
+                  geneToModule = c( ## Specification of the modules
+                               "Root" = "Root", 
+                               "A" = "APC",
+                               "B" = "TP53, EVC2",
+                               "C" = "KRAS",
+                               "D" = "PI3KCA, EPHA",
+                               "E" = "FBXW7, TCF7L2"),
+                  
+                  drvNames = c( ## Specification of drivers
+                               "APC", "TP53", "EVC2", "KRAS",
+                               "PI3KCA", "EPHA", "FBXW7", "TCF7L2")
+                  )
+
+## DAG representation
+plot(colcancer_efec, expandModules = TRUE, autofit = TRUE)
+
+```
+
+Parameter `s` refers to a numeric vector with the fitness effect that applies if the relationship is satisfied. On the other hand, parameter `sh` refers to a numeric vector with the fitness effect that applies if the relationship is not satisfied. Authors don't specify its value. However, the model proposed include a waiting time rate parameter \(\lambda\), and a mutual exclusivity intensity parameter \(\mu\). \(\lambda\) could give us an idea about the value we should give to each module. On the other hand, `sh` is given a constant value for all possible situations.
+
+Although authors don't specify the sort of dependency, in this poset, a semimonotonic dependency is defined between modules B and C with E, while a monotonic dependency is defined for the others. 
+
+The `evalAllGenotypes` function returns a table with all the genotypes from a fitnessEffects description. This table can be used to plot a fitness landscape of the model.
+
+```{r}
+colcancer_efec_FL <- evalAllGenotypes(colcancer_efec, max = 110000)
+## Output is not shown due to size of the table.
+
+## Plot of fitness landscape
+plotFitnessLandscape(colcancer_efec_FL)
+```
+
+The fitness landscape is quite busy with a lot of genotypes overlapping. However, it shows lables refering to a specific genotype and its corresponding fitness. As the number of genes mutated increases, the fitness does it as well.
+
+## Simplification of @Cristea2017
+
+In order to properly visualize a fitness landscape, a simplified model of @Cristea2017 is constructed. This model doesn't use modules, just individual genes. This approach will lead to clear fitness landscape and to properly identify processes taking place.
+
+Authors say that there is a phenomena of mutual exclusivity between certain genes of a specific pathway. Mutual exclusivity means that the presence of one gene of a specific pathway will be enough to fitness contribution, since the presence of the other gene will not have a huge impact. However, there is a specific case of mutual exclusivity called `synthetic lethality`. In this case, the presence of both genes will lead to a decrease in fitness.
+
+Therefore, the same model as in the previous case will be coded, but without specifying modules. Each module will be consider as an specific gene.
+
+```{r}
+
+## Fitness specification of the simplified poset
+Scolcancer <- allFitnessEffects(colcancer)
+
+plot(Scolcancer)
+
+## Obtain all genotypes from the fitnessEffect
+(Scolcancer_ge <- evalAllGenotypes(Scolcancer))
+
+## Plot the fitness landscape.
+plotFitnessLandscape(Scolcancer_ge,
+                     use_ggrepel = TRUE)
+
+```
+
+
+## Order effects {#sec:oef}
+
+To explore what does really mean order effects, we are going to create a simple model derived from the restriction model inferred by @Cristea2017. 
+
+This simplified model contains 3 genes: `APC`, `TP53` and `KRAS`. Genes considered as `superdrivers` by @Gerstung2011, meaning that are the main responsible for cancer progression since they provide a higher fitness gain than the other genes in the model. This conclusion is obtained from its article where they used the same colorectal cancer dataset as @Cristea2017. Thus, it can be extrapolated to our case.
+
+The relationships between those genes was previously depicted in section 1. In this case, we will set `APC`  as the parent of `KRAS`. Both, `APC` and `TP53` have as parent `Root`. Based on the waiting time rate parameter \(\lambda\), the fitness values of each possible order is given. 
+
+\(\lambda\) is higher for `APC`, which means that it seems to appear before in the cancer progression. \(\lambda\) for `KRAS` is the lower between the three, meaning that it mutates the last. `TP53` mutation occurs between `APC` and `KRAS`.
+
+Order effect is visualize using `evalAllGenotypes` function.
+
+```{r}
+
+cc <- data.frame(parent = c(rep("Root", 2), "A"),
+                 child = c("A", "C", "B"),
+                 typeDep = "MN")
+
+cc_order <- allFitnessEffects(
+  orderEffects = c("A > B > C" = 0.5, "B > A > C" = 0.2,
+                   "B > C > A" = 0.1,
+                   "B > C" = 0.2,
+                   "C > B" = 0.1,
+                   "B > A" = 0.1,
+                   "A > B" = 0.3),
+
+  geneToModule =
+    c("A" = "APC",
+      "B" = "KRAS",
+      "C" = "TP53") )
+
+(cc_order_geno <- evalAllGenotypes(cc_order, order = TRUE))
+
+```
+
+We obtain a table with the different possible genotypes as well as the order of appearance. However, this approach doesn't allow to generate neither a DAG neither a fitness landscape. Thus, is not possible to visualize the evolution of the genotypes with time. 
+
+```{r, error=TRUE, }
+
+#DAG
+plot(cc_order)
+
+# Fitness landscape
+plotFitnessLandscape(cc_order_geno)
+
+```
+
+Assuming a model where there is not an order effect, a mutation in gene "B" followed by a mutation in gene "A" will reach the same fitness as if the mutation in gene "A" occurs first. However, in the model just generated, the order of the mutation impacts the final fitness reached by the tumoral clone. Since, mutation some genes before can lead to an evolutionary advantage. 
+
+In a non order effect model, the final fitness value is the same for all the clones, while this is unlikely to happen in real life. Clones carrying a certain mutation from the beginning would survive easily than those reaching the same genotype in a different order.
+
+This is one limitation of `OncoSimulR package`, it doesn't allow to visualize those scenarios (yet). 
+
+## Epistasis
+
+Epistasis assume that there is a dependence between genotypes. The effect of a mutation depends on the genetic background in which it happens [@Poelwijk2007]. Now, we will cope with dependences between genes using epistasis. 
+
+For that, we will use the same model described in section (Order effects). As explained before, it is supposed to be a certain cancer progression restriction and therefore, the fitness values given to each different genotype is based in that criteria. 
+
+```{r}
+## Fitness object defined using epistasias
+cc_epi <- allFitnessEffects(epistasis = 
+                              c("A: -B: -C" = 0.4,
+                                "-A: B: -C" = -0.4, 
+                                "-A: -B: C" = 0.3,
+                                "A: B: -C" = 0.8,
+                                "A : B: C" = 1.4,
+                                "-A: B: C" = 0.1, 
+                                "A : -B: C" = 0.5
+                                ),
+                            geneToModule =
+                              c("A" = "APC",
+                                "B" = "KRAS",
+                                "C" = "TP53") 
+                              )
+
+## DAG (epistasis)
+plot(cc_epi, expandModules = TRUE, autofit = TRUE)
+
+## Genotypes derived from fitness defined with epistasia relationships
+(cc_epi_geno <- evalAllGenotypes(cc_epi ))
+
+
+## Fitness landscape from this relationships
+plotFitnessLandscape(cc_epi_geno, use_ggrepel = TRUE)
+
+```
+Using this approach, it is possible to visualize the DAG. In this case, there are discontinues yellow lines connecting each gene. This lines indicate a dependence between them. Fitness landscape is also plotted. 
+
+With this model, we promote the clones of tumoral cells beginning with a first mutation in `APC`. Other clones not starting with that mutation (`KRAS` or `TP53`) have a lower fitness value. On the other hand, all genotypes end with the same fitness. 
+
+## Simulating data from simplified model of @Cristea2017
+
+Restrictions set in DAG were used as a guide line to built the fitness landscape. This fitness landscape shows each possible genotype as well as its fitness. This landscape can be used to simulate the cancer progression. 
+
+`OncoSimulIndiv` is used to simulate colorectal tumor progression. 
+
+```{r}
+
+set.seed(257) ## Fix the seed for reproducibility
+
+Simul <- oncoSimulIndiv(Scolcancer, ## A fitnessEffects object
+                      model = "McFL", ## Model used
+                      mu = 1e-4, ## Mutation rate
+                      sampleEvery = 0.02, ## How often the whole population is sampled
+                      keepEvery = 1,
+                      initSize = 400, ## Initial population time
+                      finalTime = 220,
+                      keepPhylog = TRUE, ## Allow to see parent-child relationships
+                      onlyCancer = FALSE
+)
+
+#3 Plot of simulation
+plot(Simul, ## OncoSimulIndv model
+     show = "genotypes",
+     type = "stacked"
+     
+)
+
+## Parent-child relationship derived from simulation
+plotClonePhylog(Simul,
+                #fixOverlap = TRUE,
+                N = 0, ## Specify clones that exist
+                keepEvents = TRUE ## Arrows showing how many times each clones appeared
+                
+                
+)
+```
+
+
+## References
+
+<div id="refs"></div>
+
+
