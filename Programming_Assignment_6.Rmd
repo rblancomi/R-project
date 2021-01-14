@@ -35,10 +35,9 @@ This generative model allows to generate a cancer progression model including mu
 
 The colorectal cancer model  depicted in Figure 3.A [@Cristea2017] is used as an example of model to map. The colorectal cancer dataset used to built that model is obtained from @Wood2007. The poset restrictions proposed can be coded using the **OncoSimulR package** [@Diaz-Uriarte2017], concretely, the `allFitnessEffects` function. It creates mutations effects given specification of restrictions, epistasis or order effects. In this case, restrictions are used to construct the graph. 
 
-Some parameters are mandatory when `allFitnessEffects` function is used. It is the case of the *restriction table*. It specifies the dependencies between genes or modules (genes/modules parents and genes/module children). Parameter `s` and `sh` refers to a numeric vector with the fitness effect that applies if the relationship is or is not satisfied, respectively. Authors don't specify its value since they are not interested in fitness. To justify the values given, we will use the waiting time rate parameter \(\lambda\) defined in the model. Early events in cancer progression will have greater \(\lambda\) values while late events will have a lower one (values for all genes or modules are showed in Table 1). Thus, genes/modules with higher \(\lambda\) will receive a higher fitness value (`s`). On the other hand, `sh` is given a constant value for all possible situations.
+Some parameters are mandatory when `allFitnessEffects` function is used. It is the case of the *restriction table*. It specifies the dependencies between genes or modules (genes/modules parents and genes/module children). Parameter `s` and `sh` refers to a numeric vector with the fitness effect that applies if the relationship is or is not satisfied, respectively. Authors don't specify its value since they are not interested in fitness. To justify the values given, we will use the waiting time rate parameter \(\lambda\) defined in the model. Early events in cancer progression will have greater \(\lambda\) values while late events will have a lower one (values for all genes or modules are showed in \autoref{table}). Thus, genes/modules with higher \(\lambda\) will receive a higher fitness value (`s`). On the other hand, `sh` is given a constant value for all possible situations.
 
-
-Table: Waiting time rate parameter (\(\lambda\)) for each gene/module. 
+Table: Waiting time rate parameter (\(\lambda\)) for each gene/module \label{table}
 
 | Gene/module | Waiting time rate parameter (\(\lambda\)) |
 | :-----------: | :-------------------------------------: |
@@ -51,7 +50,6 @@ Table: Waiting time rate parameter (\(\lambda\)) for each gene/module.
 | PIK3CA, EPHA3 |                  0.17                   |
 |               |                                         |
 | FBXW7, TCF7L2 |                  0.08                   |
-
 
 Although authors don't specify the sort of dependency, in this poset, a semimonotonic dependency is defined between modules B and C with E (`SM`), while a monotonic dependency is defined for the others (`MN`). Model will be represented as an **Diaciclic Direct Graph (DAG)** where arrows conecting genes or modules indicate direct dependencies or constraints between them [@Diaz-Uriarte2018].
 
