@@ -114,14 +114,16 @@ volume = {24},
 year = {2017}
 }
 @article{Ciriello2012,
+abstract = {Although individual tumors of the same clinical type have surprisingly diverse genomic alterations, these events tend to occur in a limited number of pathways, and alterations that affect the same pathway tend to not co-occur in the same patient. While pathway analysis has been a powerful tool in cancer genomics, our knowledge of oncogenic pathway modules is incomplete. To systematically identify such modules, we have developed a novel method, Mutual Exclusivity Modules in cancer (MEMo). The method uses correlation analysis and statistical tests to identify network modules by three criteria: (1) Member genes are recurrently altered across a set of tumor samples; (2) member genes are known to or are likely to participate in the same biological process; and (3) alteration events within the modules are mutually exclusive. Applied to data from the Cancer Genome Atlas (TCGA), the method identifies the principal known altered modules in glioblastoma (GBM) and highlights the striking mutual exclusivity of genomic alterations in the PI(3)K, p53, and Rb pathways. In serous ovarian cancer, we make the novel observation that inactivation of BRCA1 and BRCA2 is mutually exclusive of amplification of CCNE1 and inactivation of RB1, suggesting distinct alternative causes of genomic instability in this cancer type; and, we identify RBBP8 as a candidate oncogene involved in Rb-mediated cell cycle control. When applied to any cancer genomics data set, the algorithm can nominate oncogenic alterations that have a particularly strong selective effect and may also be useful in the design of therapeutic combinations in cases where mutual exclusivity reflects synthetic lethality. {\textcopyright} 2012 by Cold Spring Harbor Laboratory Press.},
 author = {Ciriello, Giovanni and Cerami, Ethan and Sander, Chris and Schultz, Nikolaus},
-doi = {10.1101/gr.125567.111.Freely},
-file = {:C$\backslash$:/Users/danie/OneDrive/Escritorio/M{\'{a}}ster Bioinform{\'{a}}tica/Programaci{\'{o}}n{\_}estadistica{\_}R/Trabajo{\_}R/Bibliograf{\'{i}}a/Mutual{\_}exclusivity{\_}analysis{\_}identifies{\_}oncogenic{\_}network{\_}modules..pdf:pdf},
-pages = {398--406},
-title = {{Imported from https://1drv.ms/b/s!AhY577SW8kavjnFPbPdkWkpI0NKo}},
-url = {https://1drv.ms/b/s!AhY577SW8kavjnFPbPdkWkpI0NKo},
+doi = {10.1101/gr.125567.111},
+issn = {10889051},
+journal = {Genome Research},
+pmid = {21908773},
+title = {{Mutual exclusivity analysis identifies oncogenic network modules}},
 year = {2012}
 }
+
 @article{Neyshabouri2020,
 abstract = {Identification of mutations of the genes that give cancer a selective advantage is an important step towards research and clinical objectives. As such, there has been a growing interest in developing methods for identification of driver genes and their temporal order within a single patient (intra-tumor) as well as across a cohort of patients (inter-tumor). In this paper, we develop a probabilistic model for tumor progression, in which the driver genes are clustered into several ordered driver pathways. We develop an efficient inference algorithm that exhibits favorable scalability to the number of genes and samples compared to a previously introduced ILP-based method. Adopting a probabilistic approach also allows principled approaches to model selection and uncertainty quantification. Using a large set of experiments on synthetic datasets, we demonstrate our superior performance compared to the ILP-based method. We also analyze two biological datasets of colorectal and glioblastoma cancers. We emphasize that while the ILP-based method puts many seemingly passenger genes in the driver pathways, our algorithm keeps focused on truly driver genes and outputs more accurate models for cancer progression.},
 author = {Neyshabouri, Mohammadreza Mohaghegh and Jun, Seong Hwan and Lagergren, Jens},
@@ -229,4 +231,165 @@ journal = {The FASEB Journal},
 pmid = {18434431},
 title = {{Combinatorial patterns of somatic gene mutations in cancer}},
 year = {2008}
+}
+
+@article{Tomasetti2013,
+abstract = {Although it has been hypothesized that some of the somatic mutations found in tumors may occur before tumor initiation, there is little experimental or conceptual data on this topic. To gain insights into this fundamental issue, we formulated a mathematical model for the evolution of somatic mutations in which all relevant phases of a tissue's history are considered. The model makes the prediction, validated by our empirical findings, that the number of somatic mutations in tumors of self-renewing tissues is positively correlated with the age of the patient at diagnosis. Importantly, our analysis indicates that half or more of the somatic mutations in certain tumors of self-renewing tissues occur before the onset of neoplasia. The model also provides a unique way to estimate the in vivo tissue-specific somatic mutation rates in normal tissues directly from the sequencing data of tumors. Our results have substantial implications for the interpretation of the large number of genome-wide cancer studies now being undertaken.},
+author = {Tomasetti, Cristian and Vogelstein, Bert and Parmigiani, Giovanni},
+doi = {10.1073/pnas.1221068110},
+issn = {00278424},
+journal = {Proceedings of the National Academy of Sciences of the United States of America},
+keywords = {Cancer evolution,Driver mutation,Mathematical modeling,Passenger mutation,Stochastic processes},
+pmid = {23345422},
+title = {{Half or more of the somatic mutations in cancers of self-renewing tissues originate prior to tumor initiation}},
+year = {2013}
+}
+
+@article{Beerenwinkel2007,
+abstract = {Cancer results from genetic alterations that disturb the normal cooperative behavior of cells. Recent high-throughput genomic studies of cancer cells have shown that the mutational landscape of cancer is complex and that individual cancers may evolve through mutations in as many as 20 different cancer-associated genes. We use data published by Sj{\"{o}}blom et al. (2006) to develop a new mathematical model for the somatic evolution of colorectal cancers. We employ the Wright-Fisher process for exploring the basic parameters of this evolutionary process and derive an analytical approximation for the expected waiting time to the cancer phenotype. Our results highlight the relative importance of selection over both the size of the cell population at risk and the mutation rate. The model predicts that the observed genetic diversity of cancer genomes can arise under a normal mutation rate if the average selective advantage per mutation is on the order of 1{\%}. Increased mutation rates due to genetic instability would allow even smaller selective advantages during tumorigenesis. The complexity of cancer progression can be understood as the result of multiple sequential mutations, each of which has a relatively small but positive effect on net cell growth. {\textcopyright} 2007 Beerenwinkel et al.},
+author = {Beerenwinkel, Niko and Antal, Tibor and Dingli, David and Traulsen, Arne and Kinzler, Kenneth W. and Velculescu, Victor E. and Vogelstein, Bert and Nowak, Martin A.},
+doi = {10.1371/journal.pcbi.0030225},
+issn = {1553734X},
+journal = {PLoS Computational Biology},
+pmid = {17997597},
+title = {{Genetic progression and the waiting time to cancer}},
+year = {2007}
+}
+
+
+@article{Nowell1976,
+abstract = {Acquired genetic lability permits stepwise selection of variant sublines and underlies tumor progression.},
+author = {Nowell, Peter C.},
+doi = {10.1126/science.959840},
+issn = {00368075},
+journal = {Science},
+pmid = {959840},
+title = {{The clonal evolution of tumor cell populations}},
+year = {1976}
+}
+@article{Pon2015,
+abstract = {Next-generation sequencing has allowed identification of millions of somatic mutations and epigenetic changes in cancer cells. A key challenge in interpreting cancer genomes and epigenomes is distinguishing which genetic and epigenetic changes are drivers of cancer development. Frequency-based and function-based approaches have been developed to identify candidate drivers; we discuss the advantages and drawbacks of these methods as well as their latest refinements. We focus particularly on identification of the types of drivers most likely to be missed, such as genes affected by copy number alterations, mutations in noncoding regions, dysregulation of microRNA, epigenetic changes, and mutations in chromatin modifiers.},
+author = {Pon, Julia R. and Marra, Marco A.},
+doi = {10.1146/annurev-pathol-012414-040312},
+issn = {15534014},
+journal = {Annual Review of Pathology: Mechanisms of Disease},
+keywords = {bioinformatics,copy number alterations,epigenome,microRNA,regulatory regions},
+pmid = {25340638},
+title = {{Driver and passenger mutations in cancer}},
+year = {2015}
+}
+
+@misc{Lee2010,
+abstract = {Breast cancer progression involves multiple genetic events, which can activate dominant-acting oncogenes and disrupt the function of specific tumor suppressor genes. This article describes several key oncogene and tumor suppressor signaling networks that have been implicated in breast cancer progression. Among the tumor suppressors, the article emphasizes BRCA1/2 and p53 tumor suppressors. In addition to these well characterized tumor suppressors, the article highlights the importance of PTEN tumor suppressor in counteracting PI3K signaling from activated oncogenes such as ErbB2. This article discusses the use of mouse models of human breast that recapitulate the key genetic events involved in the initiation and progression of breast cancer. Finally, the therapeutic potential of targeting these key tumor suppressor and oncogene signaling networks is discussed.},
+author = {Lee, Eva Y.H.P. and Muller, William J.},
+booktitle = {Cold Spring Harbor perspectives in biology},
+doi = {10.1101/cshperspect.a003236},
+issn = {19430264},
+pmid = {20719876},
+title = {{Oncogenes and tumor suppressor genes.}},
+year = {2010}
+}
+
+@article{yeang_combinatorial_2008,
+abstract = {Cancer is a complex process in which the abnormalities of many genes appear to be involved. The combinatorial patterns of gene mutations may reveal the functional relations between genes and pathways in tumorigenesis as well as identify targets for treatment. We examined the patterns of somatic mutations of cancers from Catalog of Somatic Mutations in Cancer (COSMIC), a large-scale database curated by the Wellcome Trust Sanger Institute. The frequently mutated genes are well-known oncogenes and tumor suppressors that are involved in generic processes of cell-cycle control, signal transduction, and stress responses. These "signatures" of gene mutations are heterogeneous when the cancers from different tissues are compared. Mutations in genes functioning in different pathways can occur in the same cancer (i.e., co-occur), whereas those in genes functioning in the same pathway are rarely mutated in the same sample. This observation supports the view of tumorigenesis as derived from a process like Darwinian evolution. However, certain combinatorial mutational patterns violate these simple rules and demonstrate tissue-specific variations. For instance, mutations of genes in the Ras and Wnt pathways tend to co-occur in the large intestine but are mutually exclusive in cancers of the pancreas. The relationships between mutations in different samples of a cancer can also reveal the temporal orders of mutational events. In addition, the observed mutational patterns suggest candidates of new cosequencing targets that can either reveal novel patterns or validate the predictions deduced from existing patterns. These combinatorial mutational patterns provide guiding information for the ongoing cancer genome projects.},
+author = {Yeang, Chen-Hsiang and McCormick, Frank and Levine, Arnold},
+doi = {10.1096/fj.08-108985},
+issn = {0892-6638},
+journal = {The FASEB Journal},
+pmid = {18434431},
+title = {{Combinatorial patterns of somatic gene mutations in cancer}},
+year = {2008}
+}
+
+@article{ortmann_effect_2015,
+	title = {Effect of {Mutation} {Order} on {Myeloproliferative} {Neoplasms}},
+	volume = {372},
+	issn = {0028-4793},
+	url = {https://doi.org/10.1056/NEJMoa1412098},
+	doi = {10.1056/NEJMoa1412098},
+	abstract = {Cancers evolve as a consequence of the stepwise accumulation of somatic lesions, with competition between subclones and sequential subclonal evolution.1,2 Darwinian selection of variant subclones results in acquisition of biologic attributes required for tumor formation.3 Genetic interaction is central to this process, but it is unclear how mutated genes interact to generate the phenotypic hallmarks of cancer, and the influence, if any, of the order in which mutations are acquired is unknown.4 Cooperation between different genetic lesions has been observed in cell-line models of transformation5 and in mouse models of several cancers.6,7 Moreover, the consequences of an early . . .},
+	number = {7},
+	urldate = {2021-01-20},
+	journal = {New England Journal of Medicine},
+	author = {Ortmann, Christina A. and Kent, David G. and Nangalia, Jyoti and Silber, Yvonne and Wedge, David C. and Grinfeld, Jacob and Baxter, E. Joanna and Massie, Charles E. and Papaemmanuil, Elli and Menon, Suraj and Godfrey, Anna L. and Dimitropoulou, Danai and Guglielmelli, Paola and Bellosillo, Beatriz and Besses, Carles and Döhner, Konstanze and Harrison, Claire N. and Vassiliou, George S. and Vannucchi, Alessandro and Campbell, Peter J. and Green, Anthony R.},
+	month = feb,
+	year = {2015},
+	pmid = {25671252},
+	note = {Publisher: Massachusetts Medical Society
+\_eprint: https://doi.org/10.1056/NEJMoa1412098},
+	pages = {601--612},
+	file = {Full Text PDF:/home/henry/Zotero/storage/WGQ9NK8A/Ortmann et al. - 2015 - Effect of Mutation Order on Myeloproliferative Neo.pdf:application/pdf;Snapshot:/home/henry/Zotero/storage/G892N4VA/NEJMoa1412098.html:text/html},
+}
+
+@article{van_de_haar_identifying_2019,
+	title = {Identifying {Epistasis} in {Cancer} {Genomes}: {A} {Delicate} {Affair}},
+	volume = {177},
+	issn = {0092-8674},
+	shorttitle = {Identifying {Epistasis} in {Cancer} {Genomes}},
+	url = {http://www.sciencedirect.com/science/article/pii/S0092867419305033},
+	doi = {10.1016/j.cell.2019.05.005},
+	abstract = {Recent studies of the tumor genome seek to identify cancer pathways as groups of genes in which mutations are epistatic with one another or, specifically, “mutually exclusive.” Here, we show that most mutations are mutually exclusive not due to pathway structure but to interactions with disease subtype and tumor mutation load. In particular, many cancer driver genes are mutated preferentially in tumors with few mutations overall, causing mutations in these cancer genes to appear mutually exclusive with numerous others. Researchers should view current epistasis maps with caution until we better understand the multiple cause-and-effect relationships among factors such as tumor subtype, positive selection for mutations, and gross tumor characteristics including mutational signatures and load.},
+	language = {en},
+	number = {6},
+	urldate = {2021-01-20},
+	journal = {Cell},
+	author = {van de Haar, Joris and Canisius, Sander and Yu, Michael K. and Voest, Emile E. and Wessels, Lodewyk F. A. and Ideker, Trey},
+	month = may,
+	year = {2019},
+	keywords = {cancer, cancer genome, co-occurrence, epistasis, genome, mutation, mutation load, mutual exclusivity, subtype, systems biology},
+	pages = {1375--1383},
+	file = {ScienceDirect Full Text PDF:/home/henry/Zotero/storage/HQ3W9MLK/van de Haar et al. - 2019 - Identifying Epistasis in Cancer Genomes A Delicat.pdf:application/pdf;ScienceDirect Snapshot:/home/henry/Zotero/storage/XIG62PDI/S0092867419305033.html:text/html},
+}
+
+@article{wang_widespread_2014,
+	title = {Widespread genetic epistasis among cancer genes},
+	volume = {5},
+	copyright = {2014 Nature Publishing Group, a division of Macmillan Publishers Limited. All Rights Reserved.},
+	issn = {2041-1723},
+	url = {https://www.nature.com/articles/ncomms5828},
+	doi = {10.1038/ncomms5828},
+	abstract = {Quantitative genetic epistasis has been hypothesized to be an important factor in the development and progression of complex diseases. Cancers in particular are driven by the accumulation of mutations that may act epistatically during the course of the disease. However, as cancer mutations are uncovered at an unprecedented rate, determining which combinations of genetic alterations interact to produce cancer phenotypes remains a challenge. Here we show that by using combinatorial RNAi screening in cell culture, dense and often previously undetermined interactions among cancer genes were revealed by assessing gene pairs that are frequently co-altered in primary breast cancers. These interacting gene pairs are significantly associated with survival time when co-altered in patients, indicating that genetic interaction mapping may be leveraged to improve risk assessment. As many of these interacting gene pairs involve known drug targets, personalized treatment regimens may be improved by overlaying genetic interactions with mutational profiling.},
+	language = {en},
+	number = {1},
+	urldate = {2021-01-20},
+	journal = {Nature Communications},
+	author = {Wang, Xiaoyue and Fu, Audrey Q. and McNerney, Megan E. and White, Kevin P.},
+	month = nov,
+	year = {2014},
+	note = {Number: 1
+Publisher: Nature Publishing Group},
+	pages = {4828},
+	file = {Full Text PDF:/home/henry/Zotero/storage/LZ4ANJ7Z/Wang et al. - 2014 - Widespread genetic epistasis among cancer genes.pdf:application/pdf;Snapshot:/home/henry/Zotero/storage/ANIWB5FU/ncomms5828.html:text/html},
+}
+
+@article{reia_analysis_nodate,
+	title = {Analysis of statistical correlations between properties of adaptive walks in fitness landscapes},
+	volume = {7},
+	url = {https://royalsocietypublishing.org/doi/10.1098/rsos.192118},
+	doi = {10.1098/rsos.192118},
+	abstract = {The fitness landscape metaphor has been central in our way of thinking about adaptation. In this scenario, adaptive walks are idealized dynamics that mimic the uphill movement of an evolving population towards a fitness peak of the landscape. Recent works in experimental evolution have demonstrated that the constraints imposed by epistasis are responsible for reducing the number of accessible mutational pathways towards fitness peaks. Here, we exhaustively analyse the statistical properties of adaptive walks for two empirical fitness landscapes and theoretical NK landscapes. Some general conclusions can be drawn from our simulation study. Regardless of the dynamics, we observe that the shortest paths are more regularly used. Although the accessibility of a given fitness peak is reasonably correlated to the number of monotonic pathways towards it, the two quantities are not exactly proportional. A negative correlation between predictability and mean path divergence is established, and so the decrease of the number of effective mutational pathways ensures the convergence of the attraction basin of fitness peaks. On the other hand, other features are not conserved among fitness landscapes, such as the relationship between accessibility and predictability.},
+	number = {1},
+	urldate = {2021-01-20},
+	journal = {Royal Society Open Science},
+	author = {Reia, Sandro M. and Campos, Paulo R. A.},
+	note = {Publisher: Royal Society},
+	pages = {192118},
+	file = {Full Text PDF:/home/henry/Zotero/storage/5G8CLJJB/Reia and Campos - Analysis of statistical correlations between prope.pdf:application/pdf;Snapshot:/home/henry/Zotero/storage/KLSQVVUL/rsos.html:text/html},
+}
+
+@article{gu_landscape_2018,
+	title = {A landscape of synthetic viable interactions in cancer},
+	volume = {19},
+	issn = {1477-4054},
+	url = {https://doi.org/10.1093/bib/bbw142},
+	doi = {10.1093/bib/bbw142},
+	abstract = {Synthetic viability, which is defined as the combination of gene alterations that can rescue the lethal effects of a single gene alteration, may represent a mechanism by which cancer cells resist targeted drugs. Approaches to detect synthetic viable (SV) interactions in cancer genome to investigate drug resistance are still scarce. Here, we present a computational method to detect synthetic viability-induced drug resistance (SVDR) by integrating the multidimensional data sets, including copy number alteration, whole-exome mutation, expression profile and clinical data. SVDR comprehensively characterized the landscape of SV interactions across 8580 tumors in 32 cancer types by integrating The Cancer Genome Atlas data, small hairpin RNA-based functional experimental data and yeast genetic interaction data. We revealed that the SV interactions are favorable to cells and can predict clinical prognosis for cancer patients, which were robustly observed in an independent data set. By integrating the cancer pharmacogenomics data sets from Cancer Cell Line Encyclopedia (CCLE) and Broad Cancer Therapeutics Response Portal, we have demonstrated that SVDR enables drug resistance prediction and exhibits high reliability between two databases. To our knowledge, SVDR is the first genome-scale data-driven approach for the identification of SV interactions related to drug resistance in cancer cells. This data-driven approach lays the foundation for identifying the genomic markers to predict drug resistance and successfully infers the potential drug combination for anti-cancer therapy.},
+	number = {4},
+	urldate = {2021-01-20},
+	journal = {Briefings in Bioinformatics},
+	author = {Gu, Yunyan and Wang, Ruiping and Han, Yue and Zhou, Wenbin and Zhao, Zhangxiang and Chen, Tingting and Zhang, Yuanyuan and Peng, Fuduan and Liang, Haihai and Qi, Lishuang and Zhao, Wenyuan and Yang, Da and Guo, Zheng},
+	month = jul,
+	year = {2018},
+	pages = {644--655},
+	file = {Full Text PDF:/home/henry/Zotero/storage/5LQYMRIN/Gu et al. - 2018 - A landscape of synthetic viable interactions in ca.pdf:application/pdf;Snapshot:/home/henry/Zotero/storage/TEVHREM4/2918127.html:text/html},
 }
