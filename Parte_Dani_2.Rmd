@@ -1,0 +1,321 @@
+---
+title: 'Programming assignment, R: Simulating Pathways, Mutual Exclusivity, et al. in Cancer Progression Models'
+author: 'Raquel Blanco Martínez-Illescas^[Universidad Autónoma de Madrid, Bionformatics and Computational Biology Master], Daniel Peñas Utrilla$^*$, Henry Secaira Morocho$^{*}$'
+date: "`r Sys.Date()`"
+params:
+  doc_title: "Programming_R_assignment"
+
+output:
+  pdf_document:
+    toc: yes
+    latex_engine: xelatex
+    fig_caption: yes
+    number_sections: yes
+    toc_depth: 3
+
+bibliography: Bibliografia_R.bib
+link-citations: yes
+linkcolor: blue
+csl: vancouver.csl
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# \textcolor{blue}{Introduction} {#one}
+
+## \textcolor{blue}{Cancer Progression Models} {#one_one}
+
+Cancer is an heterogeneous disease caused by the continuous accumulation of different somatic mutations during lifetime of an individual [@raphael_simultaneous_2015; @Schill2020; @Sprouffske2011]. Identifying mutations leading to cancer progression becomes key to understand cancer development and treatment [@Pon2015; @Diaz-Uriarte2018]. Somatic mutations that affect the cells are classified in two main groups: passenger and driver mutations. Passenger mutations are silent mutations which do not lead to any pathogenic situation [@Tomasetti2013]. On the other hand, driver mutations provide the cells with morphological and metabolic alterations that ultimately lead to a selective growth advantage [@Nowell1976]. Driver mutations can affect both oncogenes and tumor suppressor genes, but conversely [@Lee2010]. 
+
+Although cancer progression is a dynamic process, tumor data is usually obtained as cross-sectional samples. This sort of data is a combination of single-time snapshots taken from different tumors at different stages of cancer progression [@Schill2020]. However, a longitudinal dataset consisting of same individual tumor samples from different time points, is preferred. Not all possible mutations' order seem to be equally responsible for cancer progression. Therefore, it is necessary to know which are the restrictions leading to cancer development. Models explaining those dependencies are called Cancer Progression Models (CPMs) [@Diaz-Uriarte2015]. CPMs are depicted as Directed Acyclic Graphs (DAG), where nodes represent genes and arrows dependencies between them [@Diaz-Uriarte2018].
+
+## \textcolor{blue}{Evolutionary Models} {#one_two}
+
+Previous studies have inferred the alterations (passenger and driver genes) and the order in which they occur during cancer progression using generative probabilistic models [@Cristea2017; @raphael_simultaneous_2015; @Neyshabouri2020]. Those methods use Oncogenic Trees (OT) and Conjuctive Bayesian Networks (CBN) to impose restrictions in the occurrence of mutations. As discussed in [@Diaz-Uriarte2015], in such methods a mutation in a driver gene can occur only if the preceding parent mutations have occurred, this is known as ***monotonicity***. Nevertheless, it is not realistic to have a single set of restrictions for all genotypes, since genotypes can follow different paths during disease progression [@Diaz-Uriarte2015]. Thus, OTs and CBNs cannot be used to address deviations from monotonicity [@Diaz-Uriarte2015]. However, Evolutionary tumor progression models can incorporate the order restrictions from OTs and CBNs and allow us to analyze the consequences of deviations from monotonicity and the genetic context in which a mutation appears [@Diaz-Uriarte2015]. Moreover, fitness landscapes can be used to understands the consequences of different evolutionary scenarios in CPMs, such as the possible paths of tumor progression and identification of genes that can block those paths [@Diaz-Uriarte2018].
+
+## \textcolor{blue}{Order of effects} {#one_three}
+
+The order in which somatic mutations are acquired influence clonal evolution, since mutations may behave as driver or passenger depending on the genetic context [@Diaz-Uriarte2015; @ortmann_effect_2015]. Three mechanism may contribute to the influence of order of effects [@ortmann_effect_2015]. First, the initial mutation can alter the cellular environment of a neoplastic clone. Then, as a consequence, the second mutation will arise in a cellular environment determined by the first mutation [@ortmann_effect_2015]. Second, the initial mutation can alter cellular pathways as targets for subsequent mutations [@ortmann_effect_2015]. Third, the initial mutation can modify the epigenetic program of cells and thus alter the consequences of the second mutation [@ortmann_effect_2015]. Therefore, the fitness of a mutations depends in which mutations were acquired previously. It is important to mention that order of effects from the restrictions imposed in a DAG, since in restrictions the fitness of a double mutant does not depend on which mutation was acquired first [@Diaz-Uriarte2017].
+
+## \textcolor{blue}{Epistatic interactions} {#one_four}
+
+Epistasis is defined as a deviation from the expected phenotype when combining two alleles [@wang_widespread_2014]. Cancer progression is driven by the accumulation of somatic mutations that interact epistatically, that is their effect is non-additive to the tumor fitness as a phenotype [@wang_widespread_2014; @van_de_haar_identifying_2019]. For example, combinations of mutations that show positive epistasis result in a stronger fitness increase (stronger than the additive effects of inividual mutations) [@van_de_haar_identifying_2019]. On the other hand, mutations that show negative epistasis result in fitness decrease (less than expected from their additive effects) [@van_de_haar_identifying_2019]. Therefore, mutations that show positive fitness are more likely to co-occur, whereas mutations that show negative fitness are rarely observed together resulting in mutual exclusivity [@van_de_haar_identifying_2019]. Moreover, reciprocal sign epistasis (see below) affect the ruggedness and lead to multiple peaks (a signature of epistasis) in the fitness landscape [@Diaz-Uriarte2018; @reia_analysis_nodate].
+
+
+### \textcolor{blue}{Synthtetic Viability} {#one_four_one}
+
+Synthetic viability is the combination of two mutations that rescue the lethal effects of a each single mutation [@gu_landscape_2018]. The idea of synthetic viability has been recently applied to identify genomic markers for drug resistance prediction and drug-combination for anti-cancer therapy [@gu_landscape_2018].
+
+### \textcolor{blue}{Mutual exclusivity} {#one_four_two}
+
+Mutual exclusivity is a common phenomenon in cancer progression [@van_de_haar_identifying_2019; @Schill2020] and occurs by synthetic lethality (described below) and null effect. This phenomenon is common in cancer signaling pathways [@van_de_haar_identifying_2019; @Schill2020]. Synthetic lethality (or reciprocal sign epistasis) occurs when combination of two mutations is detrimental for the viability of the cell, whereas each individual mutation is not [@Diaz-Uriarte2018]. On the other hand, the null effect states that a mutation that occurs first involves most of the selective advantage and thus decrease the selective pressure for others mutations to arise [@van_de_haar_identifying_2019; @Schill2020].
+
+## \textcolor{blue}{Frequency dependent fitness} {#one_five}
+(Just and idea) Describe frequency dependent fitness
+
+
+<!-- Final paragraph of the introduction -->
+In this work, we mapped DAGs inferred from three different generative probabilistic models to actual tumor evolutionary models by allowing deviations from monotonicity using functions of the **OncoSimulR** package. Moreover, we simulated other relevant scenarios for cancer progression, such as order of effects, epistatic interactions (syntehtic lethality, synthetic viability), and frequency-dependent fitness. In addition, we mapped the genotypes of our evolutionary models to fitness landscape in order to gain a better knowledge of mutational paths during tumor progression. Similarly, we did simulations of tumor progression to understand the effect of fitness associated to each genotype.
+
+# \textcolor{blue}{Methods} {#Methods}
+
+
+Complete fitness specification of each model is obtained from the function allFitnessEffects. The fitness-genotype mapping is specified by a data frame. Each evolutionary models is codded setting this data frame where dependencies between genes inferred in each model are indicated as parent-child relationships. Parent gene mutations are mandatory to child gene mutations to occur (monotonicity). Parents and children gene mutations are introduced in the model by two different columns, "parent" and "child", respectively. Mutations do not requiring a previous mutation derive from a "Root" node (non-altered genotype). Moreover, two additional columns are set to specify fitness effects associated to each genotype (evolutionary model, not just a generative model). Those columns are "s" and "sh". In the column "s" is specified the fitness effect when the restrictions defined in the CPMs model are satisfied. On the other hand, in column "sh" is set the fitness effect when restrictions are not satisfied. Mutations that are against inferred constraints can be set to a 0 value in fitness effect. However, we want to allow deviations from the monotonicity, setting a penalization when this situations occurs (negative value in "sh").
+
+Additionally, type of dependency between mutations can also be specified in the data frame. There are three different possible dependencies in OncoSimulR: monotone relationship, where relationship between specific genes is fully respected; semiminotone relationship, where two or more genes are connected to the same gene, but if just one of the parent mutations occurs is enough to child gene mutation; and XOR relationship, similar to the previous one, but child gene mutation will occur only if one parent gene is already mutated. Dependency is set in a new column called "typeDep" in the data frame. Nomenclature for the three possible genes relationship is "MN", "SM" and "XMPN" for monotone, semimonotone and XOR relationship, respectively.
+
+Restrictions' data frame just defined is used as argument of the function allFitnessEffects. Restrictions considered in the data frame can apply not to one gene, but to a set of genes (module) [@Cristea2017; @raphael_simultaneous_2015; @Neyshabouri2020]. This situation is defined by the argument "geneToModule". Furthermore, OncoSimulR allows to specify driver or passenger genes in the models. In the model mapped, all genes/modules implemented are driver genes/modules, but they are explicitly indicated. A fitnessEffects object is returned from the function allFitnessEffects, and is used as input for the function plot and the DAG is visualized. It is possible because OncoSimulR package implement the method plot.fitnessEffects for the fitnessEffects objects. When modules are used, they can be expanded with the argument "expandModules = TRUE". In addition, Wild type fitness is shown setting "addwt = TRUE". To obtain a table with all the fitness effects of all genotypes, the previous fitnessEffects object is used as input in the function evalAllGenotypes. Finally, fitness landscape of each evolutionary model is visualize with both plot or PlotFitnessLanscape function. 
+
+Fitness effects associated to each genotype can be used to simulate tumor progression with the function oncoSimulIndiv or oncoSimulPop. These functions simulates a single evolutionary trajectory or a set of evolutionary trajectories in the same conditions, respectively. McFarland model (continuous-time, logistic-like, and death rate depends on population size) is used for simulation of cancer progression, since it leads to a better performance [@Diaz-Uriarte2015]. Initial population size, the mutation rate and final time of simulation is also set. The argument "sampleEvery" informs about how often the whole population is sampled. As we are using McFarland model, a very small value is set. The argument "keepEvery" is set larger than the argument "sampleEvery" to obtain nice plots. "keepPhylog = TRUE" is set to plot the parent-child relationships occurring in the simulation as well as its frequency, using the "plotClonePhylog" function. The argument "onlyCancer" is set to TRUE when simulation is returned if cancer is reached. Otherwise, it is set to FALSE. Simulations are plotted using the function "plot". Plot styles is set to "stacked" or "line" with the argument "type".
+
+From the canonical models, simplified derived models are constructed. Those models maintain dependencies between genes, but they just focus on the important genes in cancer onset [@Gerstung2011]. These simplified versions are used to properly show and discuss different utilities available in OncoSimulR, such as order effects, epistasis, synthetic viability, synthetic lethality or frequency-dependent fitness.
+
+
+# \textcolor{blue}{PathTiMEx, a generative probabilistic graphical model of cancer progression} {#two_one}
+
+Cristea et al., 2017 [@Cristea2017] introduce a generative probabilistic graphical model of cancer progression called pathTiMEx. It is both, a waiting time model for independent mutually exclusive pathways, and a waiting time model for cancer progression among single genes. The colorectal cancer model depicted in Figure 3.A [@Cristea2017] is composed of 8 genes (APC, KRAS, TP53, EVC2, PIK3CA, EPHA, FBXW7 and TCF7L2), and is organized in 3 mutually exclusive modules and 2 individual genes. Mutually exclusive modules represent a set of genes participating in the same pathway that are not mutated at the same time [@Ciriello2012]. If one of the genes of the module is mutated, other genes will not mutate. The colorectal cancer dataset used to built that model is obtained from @Wood2007. Generative model inferred is mapped into an evolutionary model, where deviations from monotonicity are allowed. 
+
+The poset restrictions proposed [@Cristea2017] can be coded using the function allFitnessEffects. Some parameters are mandatory when the function is used (restriction table). s and sh values are not specified in [@Cristea2017] since they are not interested in fitness. Values given to both parameters derive from the waiting time rate parameter \(\lambda\) defined in the model. Early events in cancer progression are important to cancer onset and therefore, will get greater \(\lambda\) values, while late events will have a lower one (values for all genes or modules are showed in \autoref{table1}). It has been previously proposed that alterations associated with the onset of colorectal cancer (such as APC, KRAS and TP53) may provide a larger fitness advantage than alterations associated with tumor progression [@Beerenwinkel2007]. On the other hand, sh is given a constant value for all possible deviations from restrictions. Dependency between genes is set as monotonic (MN). Model will be represented as a DAG.
+
+Table: Waiting time rate parameter (\(\lambda\)) for each gene/module \label{table1}
+
+| Gene/module | Waiting time rate parameter (\(\lambda\)) |
+| :-----------: | :-------------------------------------: |
+|      APC      |                  9.5                    |
+|               |                                         |
+|     KRAS      |                  2.89                   |
+|               |                                         |
+|  TP53, EVC2   |                  1.92                   |
+|               |                                         |
+| PIK3CA, EPHA3 |                  0.17                   |
+|               |                                         |
+| FBXW7, TCF7L2 |                  0.08                   |
+
+
+```{r fig1, fig.align="center", fig.cap= "DAG from colorecta cancer"}
+## First, it is necessary to load OncoSimulR and igraph package
+library(OncoSimulR)
+
+
+## Restriction table (extended version of the poset)
+colcancer <- data.frame(
+                 parent = c(rep("Root",3), "A", "B", "C"), # Parent nodes
+                 child = c("A", "B", "D", "C", "E", "E"), ## Child nodes
+                 s = c(0.5, 0.2, 0.05, 0.1, rep(0.05, 2)), 
+                 
+                 sh = -0.3, 
+                 
+                 typeDep = "MN" ## Type of dependency 
+                  )
+
+## Fitness specification of the poset
+colcancer_efec <- allFitnessEffects(
+                  colcancer, # Poset
+                  
+                  geneToModule = c( ## Specification of the modules
+                               "Root" = "Root", 
+                               "A" = "APC",
+                               "B" = "TP53, EVC2",
+                               "C" = "KRAS",
+                               "D" = "PI3KCA, EPHA",
+                               "E" = "FBXW7, TCF7L2"),
+                  
+                  drvNames = c( ## Specification of drivers
+                               "APC", "TP53", "EVC2", "KRAS",
+                               "PI3KCA", "EPHA", "FBXW7", "TCF7L2")
+                  )
+
+
+
+## DAG representation
+plot(colcancer_efec, expandModules = TRUE, autofit = TRUE, lwdf = 2)
+
+```
+
+\autoref{fig:fig1} shows the DAG derived from the generative model proposed by @Cristea2017. Different limbs branch out from a non-altered genotype ("Root" node), each of them mimicking dependencies inferred in @Cristea2017. The function evalAllGenotypes is used to map genotypes to fitness values. \autoref{fig:fig2} shows the fitness landscape derived from the DAG (see \autoref{fig:fig1}). All possible genotypes obtained from the DAG are labeled in the fitness landscape. A busy combination of mountains and valleys can be observed in the fitness landscape due to the huge amount of possible genotypes combinations. The highest peaks represent local maximum (green box), while the lowest peaks represent local minimum (red box). Genotypes climb or go down hills depending on whether mutation satisfies or no restrictions between them. Evolutionary model allows to map the fitness associated to each genotype going beyond a simple set of restrictions.
+
+
+
+```{r fig2, fig.align="center", fig.cap="Fitness landscape from colorectal cancer"}
+colcancer_efec_FL <- evalAllGenotypes(colcancer_efec, max = 110000)
+## Output is not shown due to size of the table.
+
+## Plot of fitness landscape
+plotFitnessLandscape(colcancer_efec_FL)
+```
+
+
+## \textcolor{blue}{Simplified cancer progression model} {#two_two} 
+
+In order to properly visualize the fitness landscape, a simplified version of the model coded in \autoref{two_one} is generated. This model does not use modules, just individual genes. This approach will lead to clear fitness landscape and to properly identification of events that may occur. 
+
+There is a phenomena of mutual exclusivity between genes of the modules [@Cristea2017]. Mutations of certain genes may not be present in the genotype if another gene of the same pathway is already mutated. Dependencies between genes of the same module are defined by default as semimonotone (OR relationship) in OncosimulR. Hence, mutations of one of the genes mutually excluded of the specific pathway is enough to provide all fitness contribution to the genotype. Mutations in other genes of the same module will constitute a null effect to genotype fitness. 
+
+
+```{r poset}
+
+## Fitness specification of the simplified poset
+Scolcancer <- allFitnessEffects(colcancer,
+                                                  
+                  geneToModule = c( ## Specification of the modules
+                               "Root" = "Root", 
+                               "A" = "APC",
+                               "B" = "TP53",
+                               "C" = "KRAS",
+                               "D" = "PI3KCA",
+                               "E" = "FBXW7"),
+                  
+                  drvNames = c( ## Specification of drivers
+                               "APC", "TP53", "KRAS",
+                               "PI3KCA", "FBXW7")
+                  )
+```
+```{r fig3, fig.align="center", fig.cap="DAG from a simplified model of colorecta cancer"}
+plot(Scolcancer, expandModules = TRUE, autofit = TRUE)
+```
+
+```{r table2, fig.align= "center"}
+## Obtain all genotypes from the fitnessEffect
+(Scolcancer_ge <- evalAllGenotypes(Scolcancer))
+```
+
+```{r fig4, fig.align="center", fig.cap="Fitness landscape from a simplified model of colorectal cancer"}
+## Plot the fitness landscape.
+plotFitnessLandscape(Scolcancer_ge,
+                     use_ggrepel = TRUE)
+
+```
+
+\autoref{fig:fig3} and \autoref{fig:fig4} show the DAG graph and fitness landscape of this simplified model, respectively. DAG showed in \autoref{fig:fig3} is the same as the DAG depicted in \autoref{fig:fig1}, but without expanding modules (a gene from each module was selected for this simplification). Only one local maximum is depicted in the fitness landscape (see \autoref{fig:fig4}). It corresponds to the genotype carrying mutations in the five genes. Note that fitness value associated to local maximum does not differ much from the fitness value associated to the genotype carrying mutations in APC-PI3KCA-TP53. It reflex the idea that mutations related to cancer onset contribute higher to fitness than mutations related to cancer progression. Hence, fitness contributions of mutations in genes FBXW7 or PI3KCA are minimal. On the other hand, only one local minimum is also depicted. It corresponds to the genotype more deviated from monotonicity and it refers to the genotype carrying mutations in both KRAS and FBXW7 genes. Both mutations are expected to occur after mutations in genes APC and TP53, respectively.
+
+
+
+## \textcolor{blue}{Simulating data from a simplified model} {#two_three}
+
+DAG were used as a guide line to built the fitness landscape (see \autoref{fig:fig4}). This fitness landscape shows each possible genotype as well as its fitness. This landscape can be used to simulate fitness evolution in cancer progression. The function oncoSimulIndiv is used to simulate colorectal tumor progression. Poset with the order restrictions defined for the simplified model (see \autoref{two_two}) are included. McFarland model is used for simulation of cancer progression. Initial population size is set at 500. Only one mutation rate is used, 5e-5. The parameter keepPhylog is set true to plot the parent-child relationships occurring in the simulation as well as its frequency (plotClonePhylog function). The onlyCancer parameter is set True to stop the simulation when cancer is reached.
+
+```{r fig5, fig.align= "center", fig.cap= "Simulation of cancer progression using the fitness landscape of the simplied model (stacked plot)"}
+
+set.seed(35) ## Fix the seed for reproducibility
+
+Simul <- oncoSimulIndiv(Scolcancer, ## A fitnessEffects object
+                      model = "McFL", ## Model used
+                      mu = 5e-5, ## Mutation rate
+                      sampleEvery = 0.03, ## How often the whole population is sampled
+                      keepEvery = 1,
+                      initSize = 500, ## Initial population size
+                      keepPhylog = TRUE, ## Allow to see parent-child relationships
+                      onlyCancer = TRUE,
+                      detectionSize = NA
+)
+
+
+## Plot of simulation
+plot(Simul, ## OncoSimulIndv model
+     show = "genotypes",
+     type = "stacked"
+     
+)
+
+```
+
+
+```{r fig6, fig.align= "center", fig.cap= "Simulation of cancer progression using the fitness landscape of the simplied model (line plot)"}
+## Plot of simulation
+plot(Simul, ## OncoSimulIndv model
+     show = "genotypes",
+     type = "line"
+)
+
+```
+
+```{r fig7, fig.align="center", fig.cap="Parent-child relationship derived from simulation"}
+## Parent-child relationship derived from simulation
+plotClonePhylog(Simul, fixOverlap = TRUE,
+                N = 0, ## Specify clones that exist
+                keepEvents = TRUE ## Arrows showing how many times each clones appeared
+                
+                
+)
+```
+
+A stacked and line plot of the simulation is depicted in \autoref{fig:fig5} and \autoref{fig:fig6}, respectively. Both plots show the evolution of cell population's genotype with time. Note that cancer is reached, and thus simulation is stopped, when not the local maximum genotype is fixed (genotype carrying all mutations, see \autoref{fig:fig4}). Interestingly, it does not appear in simulation when cancer is reached. Although different genotypes coexist when cancer is reached, APC-KRAS-TP53 is the predominant genotype fixed in the simulation. This genotype carries mutations in the three genes yielding cancer onset. It was previously discussed that those three genes where responsible for cancer onset, and thus they have associated a higher fitness contribution than mutations responsible for cancer progression. Moreover, remember that its fitness was close to the local maximum peak in the fitness landscape (see \autoref{fig:fig4}). In this context, it is not surprisingly that cancer is reached when genotype carrying those three mutations is fixed in simulation. Genotype carrying an additional mutation in the FBXW7 gene starts to arise, but this genotype is responsible for cancer progression, next step in cancer.
+
+\autoref{fig:fig6} shows a better perspective of genotypes in the simulation. Wild type genotype coexists with clones carrying mutations in APC or PI3KCA. However, APC genotype's increase triggers wild type extinction. PI3KCA genotype is not able to compete with other genotypes and ends by disappearing (deviation from monotonicity). Interestingly, when APC-TP53-KRAS genotype first shows up, it can not compete with the predominant genotype at that time. In fact, it is extincted, but when it shows up for the second time it is able to fix in simulation and leads to APC-TP53 genotype's extinction.
+
+\autoref{fig:fig7} shows the genealogical evolution of genotypes in the simulation. Arrows' width represent frequency of clone apparition. Widther arrows indicate a higher frequency of change from the parent genotype to the child genotype. Although Wild Type genotype mutates in APC, PI3KCA or FBXW7, only genotypes carrying APC mutation remain. The highest frequency between parent and child genotypes is located between genotypes APC-KRAS-TP53 and APC-FBXW7-KRAS-TP53. Thus, cancer progression is led by APC-FBXW7-KRAS-TP53 genotype that comes from APC-KRAS-TP53 genotype.
+
+
+## \textcolor{blue}{Order effects} {#two_four}
+
+To explore order effects in cancer progression, another evolutionary model derived from the generative model inferred by @Cristea2017 is created. This simplified model just contains 4 genes: APC, TP53, FBWX7 and KRAS. The relationships between those genes was previously depicted in \autoref{two_two}. Both, APC and TP53 genes have as "parent" the non-altered genotype ("Root"). APC gene has as "parent" KRAS gene. On the other hand, mutation in FBWX7 gene requires KRAS and TP53 genes already mutated. \autoref{fig:fig8_1} shows the DAG of the simplified model just described. s and sh parameters are the same than in \autoref{two_one}. Dependency between genes is set as monotonic ("MN").
+
+Based on the waiting time rate parameter \(\lambda\), the fitness effect of each possible order is given (see \autoref{table1}). APC is associated with the highest \(\lambda\) value, which means that it seems to mutate early in the cancer progression. \(\lambda\) for FBWX7 is the lowest between the four, meaning that it mutates the last. TP53 mutation occurs between APC and KRAS. The order effect favored is: APC > TP53 > KRAS > FBWX7. This order in mutations' acquisition is consistent with the time rate parameter \(\lambda\), and is given the highest fitness. Other possible combinations of mutation's acquisition are not consistent with restrictions inferred in @Cristea2017, an therefore a lower fitness value is given. 
+
+Order effects between genes is introduced in the argument orderEffects of the allFitnessEffects function, and is defined with ">" symbols; for instance, A > B indicates that order effects is satisfied only when gene A is mutated before gen B. Fitness-genotype association is visualize using the evalAllGenotypes function. A table containing all possible mutations acquisition's orders and the fitness associated to each of these orders (genotypes) is obtained. In this approach, each possible genotype is associated to multiple fitness values (for instance, APC-FBWX7 genotype is mapped to a fitness value of 1 or 1.2 depending on gene order mutations), except for the genotypes only carrying one mutation. Different fitness values associated to each possible genotype depend on the mutation's path followed by the genotype. Mutation's path consistent with restrictions defined in the DAG are associated to higher fitness values. However, paths violating those restrictions (deviations from monotonicity) are penalize and fitness decreases. In total, there are 64 possible mutations' order. As expected, the highest fitness value corresponds to the genotype that suffered the mutations in the order that does not deviate from monotonicity. 
+
+In \autoref{two_one} and \autoref{two_two} order effect is not considered, and final fitness value is the same for genotypes carrying the same mutations. Nevertheless, if order effect is assumed, multiple fitness values are associated to each genotype yielding to a complex fitness landscape where a single genotype is multidepicted. An error raised when we try to plot the DAG and the fitness landscape. Order effects implemented in OncoSimulR allow to evaluate all possible gene mutation's paths (genotype-fitness table), but does not allow to generate neither a DAG nor a fitness landscape from restrictions specified as order effects. This is one limitation of the OncoSimulR package, it does not yet allow to visualize those evolutionary scenarios. 
+
+```{r fig8_1, fig.align="center", fig.cap="DAG from a simplified model of colorecta cancer"}
+
+cc <- data.frame(parent = c(rep("Root", 2), "A", "B", "C"),
+                 child = c("A", "C", "B", "D", "D"),
+                 s = c(0.5, 0.2, 0.1, rep(0.05,2)),
+                 sh = -0.3,
+                 typeDep = "MN")
+
+cc_visuali <- allFitnessEffects(cc,
+                                  geneToModule =
+    c("Root" = "Root",
+      "A" = "APC",
+      "B" = "KRAS",
+      "C" = "TP53",
+      "D" = "FBWX7") )
+
+plot(cc_visuali, expandModules = TRUE, autofit = TRUE)
+```
+
+```{r}
+
+cc_order <- allFitnessEffects(
+  orderEffects = c("A > B > C > D" = 0.5, 
+                   "B > A > C > D" = 0.2,
+                   "B > C > A > D" = 0.1,
+                   "B > C > D > A" = 0.05,
+                   "A > C" = 0.2,
+                   "C > A" = 0.05,
+                   "D > A" = 0.05,
+                   "A > D" = 0.2,
+                   "B > D" = 0.2,
+                   "C > D" = 0.2,
+                   "B > C" = 0.2,
+                   "C > B" = 0.1,
+                   "B > A" = 0.1,
+                   "A > B" = 0.3),
+
+  geneToModule =
+    c("A" = "APC",
+      "B" = "KRAS",
+      "C" = "TP53",
+      "D" = "FBWX7") )
+
+(cc_order_geno <- evalAllGenotypes(cc_order, order = TRUE))
+
+```
+
+
+```{r, error=TRUE}
+#DAG
+plot(cc_order)
+
+# Fitness landscape
+plotFitnessLandscape(cc_order_geno)
+
+```
+
+
+# \textcolor{blue}{References} {#ref}
+
+<div id="refs"></div>
