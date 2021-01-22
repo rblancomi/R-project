@@ -35,11 +35,11 @@ Although cancer progression is a dynamic process, tumor data is usually obtained
 
 Previous studies have inferred the alterations (passenger and driver genes) and the order in which they occur during cancer progression using generative probabilistic models [@Cristea2017; @raphael_simultaneous_2015; @Neyshabouri2020]. Those methods use Oncogenic Trees (OT) and Conjuctive Bayesian Networks (CBN) to impose restrictions in the occurrence of mutations. As discussed in [@Diaz-Uriarte2015], in such methods a mutation in a driver gene can occur only if the preceding parent mutations have occurred, this is known as ***monotonicity***. Nevertheless, it is not realistic to have a single set of restrictions for all genotypes, since genotypes can follow different paths during disease progression [@Diaz-Uriarte2015]. Thus, OTs and CBNs cannot be used to address deviations from monotonicity [@Diaz-Uriarte2015]. However, Evolutionary tumor progression models can incorporate the order restrictions from OTs and CBNs and allow us to analyze the consequences of deviations from monotonicity and the genetic context in which a mutation appears [@Diaz-Uriarte2015]. Moreover, fitness landscapes can be used to understands the consequences of different evolutionary scenarios in CPMs, such as the possible paths of tumor progression and identification of genes that can block those paths [@Diaz-Uriarte2018].
 
-## \textcolor{blue}{Order of effects} {#one_three}
+## \textcolor{blue}{Order of Effects} {#one_three}
 
 The order in which somatic mutations are acquired influence clonal evolution, since mutations may behave as driver or passenger depending on the genetic context [@Diaz-Uriarte2015; @ortmann_effect_2015]. Three mechanism may contribute to the influence of order of effects [@ortmann_effect_2015]. First, the initial mutation can alter the cellular environment of a neoplastic clone. Then, as a consequence, the second mutation will arise in a cellular environment determined by the first mutation [@ortmann_effect_2015]. Second, the initial mutation can alter cellular pathways as targets for subsequent mutations [@ortmann_effect_2015]. Third, the initial mutation can modify the epigenetic program of cells and thus alter the consequences of the second mutation [@ortmann_effect_2015]. Therefore, the fitness of a mutations depends in which mutations were acquired previously. It is important to mention that order of effects from the restrictions imposed in a DAG, since in restrictions the fitness of a double mutant does not depend on which mutation was acquired first [@Diaz-Uriarte2017].
 
-## \textcolor{blue}{Epistatic interactions} {#one_four}
+## \textcolor{blue}{Epistatic Interactions} {#one_four}
 
 Epistasis is defined as a deviation from the expected phenotype when combining two alleles [@wang_widespread_2014]. Cancer progression is driven by the accumulation of somatic mutations that interact epistatically, that is their effect is non-additive to the tumor fitness as a phenotype [@wang_widespread_2014; @van_de_haar_identifying_2019]. For example, combinations of mutations that show positive epistasis result in a stronger fitness increase (stronger than the additive effects of inividual mutations) [@van_de_haar_identifying_2019]. On the other hand, mutations that show negative epistasis result in fitness decrease (less than expected from their additive effects) [@van_de_haar_identifying_2019]. Therefore, mutations that show positive fitness are more likely to co-occur, whereas mutations that show negative fitness are rarely observed together resulting in mutual exclusivity [@van_de_haar_identifying_2019]. Moreover, reciprocal sign epistasis (see below) affect the ruggedness and lead to multiple peaks (a signature of epistasis) in the fitness landscape [@Diaz-Uriarte2018; @reia_analysis_nodate].
 
@@ -48,11 +48,11 @@ Epistasis is defined as a deviation from the expected phenotype when combining t
 
 Synthetic viability is the combination of two mutations that rescue the lethal effects of a each single mutation [@gu_landscape_2018]. The idea of synthetic viability has been recently applied to identify genomic markers for drug resistance prediction and drug-combination for anti-cancer therapy [@gu_landscape_2018].
 
-### \textcolor{blue}{Mutual exclusivity} {#one_four_two}
+### \textcolor{blue}{Mutual Exclusivity} {#one_four_two}
 
 Mutual exclusivity is a common phenomenon in cancer progression [@van_de_haar_identifying_2019; @Schill2020] and occurs by synthetic lethality (described below) and null effect. This phenomenon is common in cancer signaling pathways [@van_de_haar_identifying_2019; @Schill2020]. Synthetic lethality (or reciprocal sign epistasis) occurs when combination of two mutations is detrimental for the viability of the cell, whereas each individual mutation is not [@Diaz-Uriarte2018]. On the other hand, the null effect states that a mutation that occurs first involves most of the selective advantage and thus decrease the selective pressure for others mutations to arise [@van_de_haar_identifying_2019; @Schill2020].
 
-## \textcolor{blue}{Frequency dependent fitness} {#one_five}
+## \textcolor{blue}{Frequency Dependent Fitness} {#one_five}
 
 One of cancer's key features is intratumor heterogeneity, which is the coexistence of multiple malignant clones in time. In an evolutionary context, different cells compete for niche resources, establishing relationships which impact each clone's fitness. Several authors state this behavior can be explained by **evolutionary game theory** [@archetti2019cooperation], in which the "survival game" takes place between cells with different strategies to keep replicating. These strategies are the phenotypes acquired by certain accumulation of mutations, whose effect is also dependent on the temporary space in which they happen. Ancestor clones and their effect on modulating the tumor microenvironment (TME) would have condition the fitness of current phenotypes, which also impact each other while coexisting. Thus, it is reasonable to consider clones affect one another in frequency-dependent manner, meaning fitness is actually a function of the relative frequency of other clones [@archetti2019cooperation].
 
@@ -73,7 +73,7 @@ Fitness effects associated to each genotype can be used to simulate tumor progre
 From the canonical models, simplified derived models are constructed. Those models maintain dependencies between genes, but they just focus on the important genes in cancer onset [@Gerstung2011]. These simplified versions are used to properly show and discuss different utilities available in OncoSimulR, such as order effects, epistasis, synthetic viability, synthetic lethality or frequency-dependent fitness.
 
 
-# \textcolor{blue}{PathTiMEx, a generative probabilistic graphical model of cancer progression} {#two_one}
+# \textcolor{blue}{PathTiMEx, a Generative Probabilistic Graphical Model of Cancer Progression} {#two_one}
 
 Cristea et al., 2017 [@Cristea2017] introduce a generative probabilistic graphical model of cancer progression called pathTiMEx. It is both, a waiting time model for independent mutually exclusive pathways, and a waiting time model for cancer progression among single genes. The colorectal cancer model depicted in Figure 3.A [@Cristea2017] is composed of 8 genes (APC, KRAS, TP53, EVC2, PIK3CA, EPHA, FBXW7 and TCF7L2), and is organized in 3 mutually exclusive modules and 2 individual genes. Mutually exclusive modules represent a set of genes participating in the same pathway that are not mutated at the same time [@Ciriello2012]. If one of the genes of the module is mutated, other genes will not mutate. The colorectal cancer dataset used to built that model is obtained from @Wood2007. Generative model inferred is mapped into an evolutionary model, where deviations from monotonicity are allowed. 
 
@@ -147,7 +147,7 @@ plotFitnessLandscape(colcancer_efec_FL)
 ```
 
 
-## \textcolor{blue}{Simplified cancer progression model} {#two_two} 
+## \textcolor{blue}{Simplified Cancer Progression Model} {#two_two} 
 
 In order to properly visualize the fitness landscape, a simplified version of the model coded in \autoref{two_one} is generated. This model does not use modules, just individual genes. This approach will lead to clear fitness landscape and to properly identification of events that may occur. 
 
@@ -173,7 +173,7 @@ Scolcancer <- allFitnessEffects(colcancer,
                   )
 ```
 ```{r fig3, fig.align="center", fig.cap="DAG from a simplified model of colorectal cancer"}
-plot(Scolcancer, expandModules = TRUE, autofit = TRUE)
+plot(Scolcancer, expandModules = TRUE, autofit = TRUE, lwdf = 2)
 ```
 
 ```{r table2, fig.align= "center"}
@@ -192,7 +192,7 @@ plotFitnessLandscape(Scolcancer_ge,
 
 
 
-## \textcolor{blue}{Simulating data from a simplified model} {#two_three}
+## \textcolor{blue}{Simulating Data from a Simplified Model} {#two_three}
 
 DAG were used as a guide line to built the fitness landscape (see \autoref{fig:fig4}). This fitness landscape shows each possible genotype as well as its fitness. This landscape can be used to simulate fitness evolution in cancer progression. The function oncoSimulIndiv is used to simulate colorectal tumor progression. Poset with the order restrictions defined for the simplified model (see \autoref{two_two}) are included. McFarland model is used for simulation of cancer progression. Initial population size is set at 500. Only one mutation rate is used, 5e-5. The parameter keepPhylog is set true to plot the parent-child relationships occurring in the simulation as well as its frequency (plotClonePhylog function). The onlyCancer parameter is set True to stop the simulation when cancer is reached.
 
@@ -248,7 +248,7 @@ A stacked and line plot of the simulation is depicted in \autoref{fig:fig5} and 
 \autoref{fig:fig7} shows the genealogical evolution of genotypes in the simulation. Arrows' width represent frequency of clone apparition. Widther arrows indicate a higher frequency of change from the parent genotype to the child genotype. Although Wild Type genotype mutates in APC, PI3KCA or FBXW7, only genotypes carrying APC mutation remain. The highest frequency between parent and child genotypes is located between genotypes APC-KRAS-TP53 and APC-FBXW7-KRAS-TP53. Thus, cancer progression is led by APC-FBXW7-KRAS-TP53 genotype that comes from APC-KRAS-TP53 genotype.
 
 
-## \textcolor{blue}{Order effects} {#two_four}
+## \textcolor{blue}{Order Effects} {#two_four}
 
 To explore order effects in cancer progression, another evolutionary model derived from the generative model inferred by @Cristea2017 is created. This simplified model just contains 4 genes: APC, TP53, FBWX7 and KRAS. The relationships between those genes was previously depicted in \autoref{two_two}. Both, APC and TP53 genes have as "parent" the non-altered genotype ("Root"). APC gene has as "parent" KRAS gene. On the other hand, mutation in FBWX7 gene requires KRAS and TP53 genes already mutated. \autoref{fig:fig8_1} shows the DAG of the simplified model just described. s and sh parameters are the same than in \autoref{two_one}. Dependency between genes is set as monotonic ("MN").
 
@@ -272,9 +272,9 @@ cc_visuali <- allFitnessEffects(cc,
       "A" = "APC",
       "B" = "KRAS",
       "C" = "TP53",
-      "D" = "FBWX7") )
-
-plot(cc_visuali, expandModules = TRUE, autofit = TRUE)
+      "D" = "FBXW7") )
+## DAG
+plot(cc_visuali, expandModules = TRUE, autofit = TRUE, lwdf = 2)
 ```
 
 ```{r}
@@ -299,7 +299,7 @@ cc_order <- allFitnessEffects(
     c("A" = "APC",
       "B" = "KRAS",
       "C" = "TP53",
-      "D" = "FBWX7") )
+      "D" = "FBXW7") )
 
 (cc_order_geno <- evalAllGenotypes(cc_order, order = TRUE))
 
@@ -682,7 +682,7 @@ plot(CRC_F4, use_ggrepel = TRUE)
 
 ```
 
-# \textcolor{blue}{A probabilistic model of mutually exclusive linearly ordered driver pathways} {#four}
+# \textcolor{blue}{A Probabilistic Model of Mutually Exclusive Linearly Ordered Driver Pathways} {#four}
 
 Mohaghegh Neyshabouri et al. @Neyshabouri2020 propose a probabilistic model of mutually exclusive linearly ordered driver pathways and analyze one large dataset of colorectal adenocarcinoma (COADREAD) from IntOGen-mutations database. Their model assumes driver genes are over-represented among those mutated across a large tumor collection and, thus, they can be identified in terms of frequency. Also, those participating of the same pathway are mutated in a mutually exclusive manner because more than one mutation in a pathway does not give any selective advantage to the clone.
 
@@ -749,11 +749,11 @@ plotFitnessLandscape(COADREAD_FL)
 ```
 \autoref{fig:fig29} plots all possible genotypes in a very busy fitness landscape. Although it is not possible to visualize genotypes clearly, we can see an exponential trend towards local maxima, corresponding to the clones carrying seven driver-genes genotypes. Stands out how very different genotypes behave the same due to the mutual exclusivity effect, which is probably simplifying much more complex interactions among genes, specially the effect in fitness different genes from the same module could have if we didn't account for the mutual exclusivity phenomenon. In next section we discuss genotypes distribution with a simplified model. 
 
-## \textcolor{blue}{Simplified cancer progression model} {#four_one}
+## \textcolor{blue}{Simplified Cancer Progression Model} {#four_one}
 
 As we did with previous models, for illustrating purposes we designed a simplified version of the CPM by @Neyshabouri2020 to assess its reliability when considering other evolutionary scenarios. This time, we take the first four modules of the complete DAG (maintaining same fitness parameters), being the fourth the only one carrying two genes and, thus, affected by mutual exclusivity circumstance (\autoref{fig:fig30}). 
 
-The fitness landscape shown in \autoref{fig:fig31} includes some of the possible genotypes. Clearer than in \autoref{fig:fig29}, we see fitness increases exponentially following the restrictions established in the DAG. Local minima (red squares) correspond to genotypes violating these constraints, and gain changes (green lines) are consistent with satisfied restrictions. However, one of the local maxima genotypes (green squares) corresponds to a genotype violating mutual exclusivity (PIK3CA and NRAS appear together). This is explained because the Modules functionality in OncoSimulR sets fitness to zero when genes from the same module mutate at a time as there is a null effect because both genes participate from the same pathway. Because there is not a decrease in the fitness of the genotype (*i.ei* no deleterious effect), it can still be a local maxima. Yet, it is unlikely a genotype needed of an extra mutation to compete with the other maximum-fitness genotypes will survive long during cancer progression to fixate. **DE TODAS FORMAS, AQUÍ IRÍA LO QUE SEA QUE NOS DIGA RAMÓN (LO QUITO?)** . 
+The fitness landscape shown in \autoref{fig:fig31} includes some of the possible genotypes. Clearer than in \autoref{fig:fig29}, we see fitness increases exponentially following the restrictions established in the DAG. Local minima (red squares) correspond to genotypes violating these constraints, and gain changes (green lines) are consistent with satisfied restrictions. However, one of the local maxima genotypes (green squares) corresponds to a genotype violating mutual exclusivity (PIK3CA and NRAS appear together). This is explained because the Modules functionality in OncoSimulR sets fitness to zero when genes from the same module mutate at a time as there is a null effect because both genes participate from the same pathway. Because there is not a decrease in the fitness of the genotype (*i.ei* no deleterious effect), it can still be a local maxima. Yet, it is unlikely a genotype needed of an extra mutation to compete with the other maximum-fitness genotypes will survive long during cancer progression to fixate.
 
 ```{r fig30, fig.align="center", fig.cap= "Simplified DAG of restrictions for the COADREAD dataset"}
 
@@ -780,7 +780,7 @@ plot(COADREAD_fitness_5d, expandModules = TRUE, autofit = TRUE)
 ```
 ```{r fig31, fig.align="center", fig.cap= "Fitness landscape corresponding with the simplified DAG of restrictions for the COADREAD dataset"}
 ## Evaluation of all possible genotypes fitness under the previous fitness specifications
-COADREAD_FL_5d <- evalAllGenotypes(COADREAD_fitness_5d)
+(COADREAD_FL_5d <- evalAllGenotypes(COADREAD_fitness_5d))
 
 ## Fitness landscape representation
 plotFitnessLandscape(COADREAD_FL_5d, use_ggrepel = TRUE) 
@@ -835,7 +835,7 @@ plotClonePhylog(COADREAD_Simul_5d[[3]],
 ```
 
 
-## \textcolor{blue}{Frequency-dependent fitness} {#four_two}
+## \textcolor{blue}{Frequency-dependent Fitness} {#four_two}
 
 As previously introduced, clones that coexist in a tumor can influence the fitness of each other in a frequency-dependent manner when a mutation produces a phenotype able to modulate the tumor microenvironment. OncoSimulR incorporates the frecuencyDependentFitness specification to allow modelling interactions among clones during tumor progression. In the simulations ran with the simplified model, we significantly observed APC, TP53, KRAS, PIK3CA, NRAS genotype in the final stage of the simulation, an unexpected event considering PIK3CA and NRAS are mutually exclusive. This might denote there is an additional evolutionary event directing the very infrequent coexistence of these two genes in tumor samples [@Neyshabouri2020]. Here, we propose APC, TP53, KRAS, PIK3CA, NRAS genotype fitness could depend on the frequency of APC, TP53, KRAS, PIK3CA and APC, TP53, KRAS, NRAS genotypes in the context of a competitive relationship among clones for niche nutrients. APC, TP53, KRAS, PIK3CA, NRAS clones would be more energetically demanding and thus, coexistence with other clones would be detrimental (considering the three clones have same fitness).
 
@@ -864,12 +864,12 @@ COADREAD_fitness_freqdep <- allFitnessEffects(genotFitness = COADREAD_gen_freqde
                                                    frequencyType = "rel")
 
 ## Evaluate all genotypes considering population sizes of the clones
-COADREAD_FL_freqdep <- evalAllGenotypes(COADREAD_fitness_freqdep,
+(COADREAD_FL_freqdep <- evalAllGenotypes(COADREAD_fitness_freqdep,
                                  spPopSizes = c("WT" = 5, "APC" = 5, "APC, TP53" = 5,
                                                 "APC, TP53, KRAS" = 10,
                                                 "APC, TP53, KRAS, PIK3CA" = 50,
                                                 "APC, TP53, KRAS, NRAS" = 50,
-                                                "APC, TP53, KRAS, PIK3CA, NRAS" = 50))
+                                                "APC, TP53, KRAS, PIK3CA, NRAS" = 50)))
                                                    
 
 ## Fitness landscape representation
@@ -936,7 +936,7 @@ plotClonePhylog(COADREAD_Simul_freqdep[[9]],
                 keepEvents = TRUE ## Arrows showing how many times each clones appeared
 )
 ```
-# \textcolor{blue}{Discussion and conclusions} {#five}
+# \textcolor{blue}{Discussion and Conclusions} {#five}
 
 Cancer progression models (CPMs) are constructed upon genotype frequency data obtained from cross-sectional tumor samples of different individuals. They provide information on mutational restrictions in the form of Directed Acyclic Graphs (DAGs), specifying strict cancer development paths. Accordingly, CPMs do not allow deviations from DAGs of restrictions, meaning any genotype not included in the model cannot exist [@Diaz-Uriarte2017]. However, cancer progression occurs in an evolutionary scenario that makes the process much more flexible, as well as conditioned by other phenomena. Thus, it is paramount to approach cancer progression from an evolutionary perspective, accounting for fitness specification of genotypes in each temporary space. Fitness landscapes include all possible paths of tumor progression and enable to study different outcomes depending on the selected evolutionary model [@Diaz-Uriarte2015; @Diaz-Uriarte2018].
 
@@ -944,7 +944,7 @@ In this work, we mapped various CPMs [@Cristea2017; @raphael_simultaneous_2015; 
 
 Order effects consider the path in which mutations are accumulated when mapping the fitness of genotypes. A same genotype can be associated to different fitness values depending if the mutations acquired violate or not restrictions defined in the model. Favoring genotypes consistent with gene's dependencies. In this context, the fitness landscape will show the same genotypes at different heights, depending on the order in which mutations are acquired. Frequency-dependent fitness also shapes the fitness landscape so that mutually exclusive genes are less likely to appear together due to a lower fitness in the presence of other clones. All this evidence supports the idea that cancer progression is better explained through an evolutionary perspective, as evolution significantly modulates the landscape in which clones develop. Current CPMs, based on probabilistic methodologies, cannot recapitulate these phenomena and thus, conclusions derived from them should be questioned and examine under an evolutionary approach. 
 
-OncoSimulR [@Diaz-Uriarte2017] is a very complete and convenient clone-based genetic simulator to evaluate cancer progression under evolutionary models. Apart from enabling fitness specification considering order and restriction of mutations, epistasia and clone's frequency for running cancer simulations, it displays all possible paths of tumor progression in fitness landscapes so it is possible to examine differences among evolutionary models and their subsequent cancer simulations. However, fitness landscapes are limited to a small set of genes to clearly identify all possible paths, decreasing the capacity of this software. Also, DAGs of restrictions admit only eight nodes, hampering the mapping of large CPMs, which usually correspond to the most realistic. 
+OncoSimulR [@Diaz-Uriarte2017] is a very complete and convenient clone-based genetic simulator to evaluate cancer progression under evolutionary models. Apart from enabling fitness specification considering order and restriction of mutations, epistasia and clone's frequency for running cancer simulations, it displays all possible paths of tumor progression in fitness landscapes so it is possible to examine differences among evolutionary models and their subsequent cancer simulations. However, fitness landscapes are limited to a small set of genes to clearly identify all possible paths, decreasing the capacity of this software. In addition, it does not display DAG nor fitness landscape when order effects is used to define fitness effects. Also, DAGs of restrictions admit only eight nodes, hampering the mapping of large CPMs, which usually correspond to the most realistic. 
 
 
 # \textcolor{blue}{References} {#ref}
